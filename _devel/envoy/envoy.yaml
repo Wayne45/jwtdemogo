@@ -31,6 +31,7 @@ static_resources:
                             - name: Authorization
                               value_prefix: "Bearer "
                           payload_in_metadata: jwt_payload
+                          forward_payload_header: "auth_user"
                       rules:
                         # Not jwt verification is required for POST /v1/jwt-tokens path
                         - match:
@@ -44,16 +45,6 @@ static_resources:
                             prefix: "/"
                           requires:
                             provider_name: jwt_auth
-                  - name: envoy.filters.http.lua
-                    typed_config:
-                      "@type": type.googleapis.com/envoy.extensions.filters.http.lua.v3.Lua
-                      inline_code: |
-                        function envoy_on_request(request_handle)
-                          local meta = request_handle:streamInfo():dynamicMetadata()
-                          for key, value in pairs(meta) do
-                            request_handle:headers():add("jwt-extracted-user", value.jwt_payload.iss)
-                          end
-                        end
                   - name: envoy.filters.http.router
                     typed_config:
                       "@type": type.googleapis.com/envoy.extensions.filters.http.router.v3.Router
