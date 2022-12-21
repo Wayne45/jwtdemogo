@@ -34,7 +34,7 @@ func SignJwt(g *gin.Context) {
 	token := jwt.NewWithClaims(jwt.SigningMethodRS512, jwt.MapClaims{
 		// now + 1h
 		"exp": time.Now().Add(time.Hour).UnixMilli() / 1000,
-		"iss": "gogotravel",
+		"iss": "jwtdemogo",
 	})
 	signed, err := token.SignedString(privateKey)
 	if err != nil {

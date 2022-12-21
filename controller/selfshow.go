@@ -1,11 +1,16 @@
 package controller
 
 import (
-	"fmt"
+	"encoding/base64"
+	"encoding/json"
 	"github.com/gin-gonic/gin"
 	"net/http"
-	"net/http/httputil"
 )
+
+type Identity struct {
+	Iss string `json:"iss"`
+	Exp int32  `json:"exp"`
+}
 
 // Show identity by extracting from header
 // @Summary Show identity
@@ -16,11 +21,21 @@ import (
 // @Success 200 {string} Identity string
 // @Router /self [get]
 func ShowSelf(g *gin.Context) {
-	dump, _ := httputil.DumpRequest(g.Request, true)
-	fmt.Println(string(dump))
-
-	self := g.GetHeader("x-jwt-claim-nested-claim")
-	g.JSON(http.StatusOK, gin.H{
-		"identity": self,
-	})
+	//dump, _ := httputil.DumpRequest(g.Request, true)
+	//fmt.Println(string(dump))
+	header := g.GetHeader("auth_user")
+	if header != "" {
+		decoded, err := base64.RawStdEncoding.DecodeString(header)
+		if err != nil {
+			g.JSON(http.StatusUnauthorized, HttpError{ErrBadAuth, err.Error()})
+		} else {
+			self := Identity{}
+			err = json.Unmarshal(decoded, &self)
+			if err != nil {
+				g.JSON(http.StatusInternalServerError, HttpError{ErrServerError, err.Error()})
+			} else {
+				g.JSON(http.StatusOK, self)
+			}
+		}
+	}
 }
