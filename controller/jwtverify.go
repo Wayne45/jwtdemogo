@@ -24,7 +24,7 @@ func init() {
 	}
 }
 
-// Verify JWT token and print the claims
+// VerifyJwt Verify JWT token and print the claims
 // @Summary Verify JWT token
 // @Schemes
 // @Description Verify JWT token

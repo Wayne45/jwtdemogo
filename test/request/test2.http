@@ -1,0 +1,13 @@
+### Error, not bearer
+GET http://localhost:8081/v1/jwt-tokens
+Authorization: Bad
+
+### Error, bad token
+GET http://localhost:8081/v1/jwt-tokens
+Authorization: Bearer bad
+
+### Error, no authorization
+GET http://localhost:8081/v1/jwt-tokens
+
+### Error, invalid path
+GET http://localhost:8081/v1/test

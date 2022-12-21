@@ -11,8 +11,9 @@ services:
     expose:
       - 80
     ports:
-      - 8081:80
+      - "8081:80"
     volumes:
+      - ./files/publickey-jwks.txt:/etc/envoy/jwks/publickey-jwks.txt
       - go_logs:/app/logs
 
 # end of cloud-service
