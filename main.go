@@ -20,5 +20,5 @@ func main() {
 	}
 	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerfiles.Handler))
 
-	r.Run()
+	r.Run(":30001")
 }

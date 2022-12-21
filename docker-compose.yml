@@ -1,0 +1,20 @@
+version: "3.8"
+services:
+  envoy:
+    build:
+      context: ./_devel/envoy
+      dockerfile: ./Dockerfile
+      cache_from:
+        - envoyproxy/envoy:v1.24.1
+    image: go-envoy
+    container_name: go-envoy
+    expose:
+      - 80
+    ports:
+      - 8081:80
+    volumes:
+      - go_logs:/app/logs
+
+# end of cloud-service
+volumes:
+  go_logs:

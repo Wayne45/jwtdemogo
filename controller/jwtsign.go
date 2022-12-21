@@ -22,7 +22,7 @@ func init() {
 	}
 }
 
-// Sign JWT token for testing
+// SignJwt Sign JWT token for testing
 // @Summary Sign JWT token
 // @Schemes
 // @Description Sign JWT token

@@ -1,0 +1,56 @@
+static_resources:
+  listeners:
+    - name: listener_http
+      address:
+        socket_address:
+          address: 0.0.0.0
+          port_value: 80
+      filter_chains:
+        - filters:
+            - name: envoy.filters.network.http_connection_manager
+              typed_config:
+                "@type": type.googleapis.com/envoy.extensions.filters.network.http_connection_manager.v3.HttpConnectionManager
+                stat_prefix: ingress_http
+                access_log:
+                  - name: envoy.access_loggers.stdout
+                    typed_config:
+                      "@type": type.googleapis.com/envoy.extensions.access_loggers.stream.v3.StdoutAccessLog
+                      log_format:
+                        text_format_source:
+                          inline_string: "[%REQ(X-REQUEST-ID)%] %START_TIME(%Y-%m-%d %H:%M:%S.%3f)% [execTime: %DURATION%] %REQ(:METHOD)% %REQ(X-ENVOY-ORIGINAL-PATH?:PATH)% %PROTOCOL% [status: %RESPONSE_CODE%][x-linksys-moab-site-id: %REQ(x-linksys-moab-site-id)%][ssl-client-verify: %REQ(ssl-client-verify)%][user-agent: %REQ(USER-AGENT)%][ssl-client-subject-dn: %REQ(ssl-client-subject-dn)%][%REQ(:AUTHORITY)%][%UPSTREAM_HOST%][jwt-extracted-user: %REQ(jwt-extracted-user)%]\n"
+                http_filters:
+                  - name: envoy.filters.http.router
+                    typed_config:
+                      "@type": type.googleapis.com/envoy.extensions.filters.http.router.v3.Router
+                route_config:
+                  virtual_hosts:
+                    - name: local_routes
+                      domains: ["*"]
+                      routes:
+                        - match:
+                            prefix: "/v1/jwt-tokens"
+                          route:
+                            cluster: host30001
+                        - match:
+                            prefix: "/"
+                          response_headers_to_add:
+                            - header:
+                                key: "Content-Type"
+                                value: "application/json"
+                          direct_response:
+                            status: 403
+                            body:
+                              inline_string: "{\"code\":\"FORBIDDEN\",\"errorMessage\": \"Invalid routing path\"}"
+  clusters:
+    - name: host30001
+      type: STRICT_DNS
+      connect_timeout: 5s
+      load_assignment:
+        cluster_name: host30001
+        endpoints:
+          - lb_endpoints:
+              - endpoint:
+                  address:
+                    socket_address:
+                      address: host.docker.internal
+                      port_value: 30001
