@@ -8,3 +8,8 @@ client.global.set("token", response.body.token);
 ### Verify token
 GET http://localhost:8081/v1/jwt-tokens
 Authorization: Bearer {{token}}
+
+### Show Self
+GET http://localhost:8081/v1/self
+foo: foo
+bar: bar
