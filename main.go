@@ -17,6 +17,8 @@ func main() {
 	{
 		v1.POST("/jwt-tokens", controller.SignJwt)
 		v1.GET("/jwt-tokens", controller.VerifyJwt)
+
+		v1.GET("/self", controller.ShowSelf)
 	}
 	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerfiles.Handler))
 
