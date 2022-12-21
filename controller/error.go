@@ -4,9 +4,10 @@ package controller
 type ErrorCode string
 
 const (
-	MissingAuth  = "MISSING_AUTH"
-	BadAuth      = "BAD_AUTH"
-	JwtSignError = "SIGN_JWT_ERROR"
+	ErrMissingAuth  = "MISSING_AUTH"
+	ErrBadAuth      = "BAD_AUTH"
+	ErrJwtSignError = "SIGN_JWT_ERROR"
+	ErrServerError  = "SERVER_ERROR"
 )
 
 // HttpError The standard error format

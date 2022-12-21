@@ -28,7 +28,7 @@ static_resources:
                       domains: ["*"]
                       routes:
                         - match:
-                            prefix: "/v1/jwt-tokens"
+                            prefix: "/v1"
                           route:
                             cluster: host30001
                         - match:

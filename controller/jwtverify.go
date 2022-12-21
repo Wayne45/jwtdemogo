@@ -40,13 +40,13 @@ func VerifyJwt(g *gin.Context) {
 			return publicKey, nil
 		})
 		if err != nil {
-			g.JSON(http.StatusUnauthorized, HttpError{BadAuth, err.Error()})
+			g.JSON(http.StatusUnauthorized, HttpError{ErrBadAuth, err.Error()})
 		} else {
 			if claims, ok := token.Claims.(jwt.MapClaims); ok {
 				g.JSON(http.StatusOK, claims)
 			}
 		}
 	} else {
-		g.JSON(http.StatusUnauthorized, HttpError{MissingAuth, ""})
+		g.JSON(http.StatusUnauthorized, HttpError{ErrMissingAuth, ""})
 	}
 }
