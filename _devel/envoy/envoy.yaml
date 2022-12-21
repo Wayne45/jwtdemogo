@@ -36,10 +36,6 @@ static_resources:
                         # Not jwt verification is required for POST /v1/jwt-tokens path
                         - match:
                             prefix: "/v1/jwt-tokens"
-                            headers:
-                              name: :method
-                              string_match:
-                                exact: POST
                         # Jwt verification for jwt_auth is required for all other requests.
                         - match:
                             prefix: "/"

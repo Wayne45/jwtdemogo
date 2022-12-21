@@ -11,5 +11,6 @@ Authorization: Bearer {{token}}
 
 ### Show Self
 GET http://localhost:8081/v1/self
+Authorization: Bearer {{token}}
 foo: foo
 bar: bar
