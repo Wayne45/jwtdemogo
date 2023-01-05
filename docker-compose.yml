@@ -8,10 +8,13 @@ services:
         - envoyproxy/envoy:v1.24.1
     image: go-envoy
     container_name: go-envoy
+    command: -c /etc/envoy/envoy.yaml --log-path /app/logs/go-envoy/system.log
     expose:
       - 80
+      - 9901
     ports:
       - "8081:80"
+      - "9901:9901"
     volumes:
       - ./files/publickey-jwks.txt:/etc/envoy/jwks/publickey-jwks.txt
       - ./_devel/envoy/envoy.yaml:/etc/envoy/envoy.yaml
