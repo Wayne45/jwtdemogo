@@ -3,6 +3,7 @@ Quick start
 
 ![setup](https://github.com/Wayne45/jwtdemogo/blob/master/jwtdemogo.png)
 
+This demo will decode Jwt tokens through go-service and envoy JwtAuthentication filter.
 ### Run:
 1. `docker-compose build`
 2. `docker-compose up -d`
