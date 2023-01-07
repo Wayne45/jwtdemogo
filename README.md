@@ -1,10 +1,28 @@
 Quick start
 -----------
 
-1. `go mod download` to update the required libraries
-2. Generate RSA key pair. Run the below in files directory.
+![setup](https://github.com/Wayne45/jwtdemogo/blob/master/jwtdemogo.png)
+
+### Run:
+1. `docker-compose build`
+2. `docker-compose up -d`
+
+### Test:
+1. Run test case on test/request/test1.http
+2. Run test case on test/request/test2.http
+
+### API:
+1. Generate jwt token:
    ```
-   openssl genrsa -out privatekey.pem 2048
-   openssl rsa -in privatekey.pem -outform PEM -pubout -out publickey.pem
+   curl --request POST 'localhost:8081/v1/jwt-tokens'
    ```
-3. `go run main.go` to start the application in project folder. 
+2. Verify jwt token by go service:
+   ```
+   curl --request GET 'localhost:8081/v1/jwt-tokens' \
+   --header 'Authorization: Bearer {token}'
+   ```
+3. Verify jwt token by envoy:
+   ```
+   curl --request GET 'localhost:8081/v1/self' \
+   --header 'Authorization: Bearer {token}'
+   ```

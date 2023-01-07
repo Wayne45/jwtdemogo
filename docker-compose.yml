@@ -1,14 +1,9 @@
 version: "3.8"
 services:
   envoy:
-    build:
-      context: ./_devel/envoy
-      dockerfile: ./Dockerfile
-      cache_from:
-        - envoyproxy/envoy:v1.24.1
-    image: go-envoy
-    container_name: go-envoy
-    command: -c /etc/envoy/envoy.yaml --log-path /app/logs/go-envoy/system.log
+    image: envoyproxy/envoy-alpine:v1.21.6
+    container_name: envoy
+    command: "/usr/local/bin/envoy -c /etc/envoy/envoy.yaml --log-path /tmp/system.log"
     expose:
       - 80
       - 9901
@@ -20,6 +15,14 @@ services:
       - ./_devel/envoy/envoy.yaml:/etc/envoy/envoy.yaml
       - go_logs:/app/logs
 
-# end of cloud-service
+  service:
+    build: service/
+    container_name: service
+    ports:
+      - "30001:30001"
+    volumes:
+      - ./files/privatekey.pem:/files/privatekey.pem
+      - ./files/publickey.pem:/files/publickey.pem
+
 volumes:
   go_logs:

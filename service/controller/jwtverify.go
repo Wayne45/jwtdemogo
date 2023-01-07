@@ -14,7 +14,7 @@ var publicKey *rsa.PublicKey
 const bearerPrefix = "Bearer "
 
 func init() {
-	bytes, err := os.ReadFile("./files/publickey.pem")
+	bytes, err := os.ReadFile("/files/publickey.pem")
 	if err != nil {
 		panic(err)
 	}
