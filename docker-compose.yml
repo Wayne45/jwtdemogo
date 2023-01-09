@@ -3,7 +3,7 @@ services:
   envoy:
     build: _devel/envoy/
     container_name: envoy
-    command: "/usr/local/bin/envoy -c /etc/envoy/envoy.yaml --log-path /tmp/system.log --log-format '[SYSTEM][%Y-%m-%d %T.%e][%t][%l][%n] %v'"
+    command: "/usr/local/bin/envoy -c /etc/envoy/envoy.yaml"
     ports:
       - "8081:80"
       - "9901:9901"
