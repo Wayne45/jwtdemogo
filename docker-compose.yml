@@ -1,12 +1,9 @@
 version: "3.8"
 services:
   envoy:
-    image: envoyproxy/envoy-alpine:v1.21.6
+    build: _devel/envoy/
     container_name: envoy
     command: "/usr/local/bin/envoy -c /etc/envoy/envoy.yaml --log-path /tmp/system.log --log-format '[SYSTEM][%Y-%m-%d %T.%e][%t][%l][%n] %v'"
-    expose:
-      - 80
-      - 9901
     ports:
       - "8081:80"
       - "9901:9901"
