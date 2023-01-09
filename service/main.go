@@ -10,7 +10,8 @@ import (
 
 // @BasePath /v1
 func main() {
-	r := gin.Default()
+	//r := gin.Default()
+	r := gin.New() // Do not print request logs on server.
 
 	docs.SwaggerInfo.BasePath = "/v1"
 	v1 := r.Group("/v1")

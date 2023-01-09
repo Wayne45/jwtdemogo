@@ -1,5 +1,6 @@
 ### Create token
 POST http://localhost:8081/v1/jwt-tokens
+x-amzn-trace-id: Root=1-67891233-abcdef012345678912345678
 
 > {%
 client.global.set("token", response.body.token);
@@ -8,9 +9,10 @@ client.global.set("token", response.body.token);
 ### Verify token
 GET http://localhost:8081/v1/jwt-tokens
 Authorization: Bearer {{token}}
+x-amzn-trace-id: Root=2-67891233-abcdef012345678912345678
 
 ### Show Self
 GET http://localhost:8081/v1/self
 Authorization: Bearer {{token}}
-foo: foo
-bar: bar
+x-amzn-trace-id: Root=3-67891233-abcdef012345678912345678
+

@@ -3,7 +3,7 @@ services:
   envoy:
     image: envoyproxy/envoy-alpine:v1.21.6
     container_name: envoy
-    command: "/usr/local/bin/envoy -c /etc/envoy/envoy.yaml --log-path /tmp/system.log"
+    command: "/usr/local/bin/envoy -c /etc/envoy/envoy.yaml --log-path /tmp/system.log --log-format '[SYSTEM][%Y-%m-%d %T.%e][%t][%l][%n] %v'"
     expose:
       - 80
       - 9901

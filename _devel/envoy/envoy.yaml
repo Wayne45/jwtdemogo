@@ -17,11 +17,14 @@ static_resources:
                       "@type": type.googleapis.com/envoy.extensions.access_loggers.stream.v3.StdoutAccessLog
                       log_format:
                         text_format_source:
-                          inline_string: "[%REQ(X-REQUEST-ID)%] %START_TIME(%Y-%m-%d %H:%M:%S.%3f)% [execTime: %DURATION%] %REQ(:METHOD)% %REQ(X-ENVOY-ORIGINAL-PATH?:PATH)% %PROTOCOL% [status: %RESPONSE_CODE%][user-agent: %REQ(USER-AGENT)%][%REQ(:AUTHORITY)%][%UPSTREAM_HOST%]\n"
-#                  - name: envoy.access_loggers.file
-#                    typed_config:
-#                      "@type": type.googleapis.com/envoy.extensions.access_loggers.file.v3.FileAccessLog
-#                      path: /app/logs/envoy-access-logs.log
+                          inline_string: "[ACCESS_LOG][%REQ(X-REQUEST-ID)%][%START_TIME%] \"%REQ(:METHOD)% %REQ(X-ENVOY-ORIGINAL-PATH?:PATH)% %PROTOCOL%\" %RESPONSE_CODE% %RESPONSE_FLAGS% %BYTES_RECEIVED% %BYTES_SENT% %DURATION% %RESP(X-ENVOY-UPSTREAM-SERVICE-TIME)% \"%REQ(X-FORWARDED-FOR)%\" \"%REQ(USER-AGENT)%\" \"%REQ(:AUTHORITY)%\" \"%UPSTREAM_HOST%\" \"%DOWNSTREAM_REMOTE_ADDRESS_WITHOUT_PORT%\"\n"
+                  - name: envoy.access_loggers.file
+                    typed_config:
+                      "@type": type.googleapis.com/envoy.extensions.access_loggers.file.v3.FileAccessLog
+                      path: /tmp/access.log
+                      log_format:
+                        text_format_source:
+                          inline_string: "[%REQ(X-REQUEST-ID)%][%START_TIME%] \"%REQ(:METHOD)% %REQ(X-ENVOY-ORIGINAL-PATH?:PATH)% %PROTOCOL%\" %RESPONSE_CODE% %RESPONSE_FLAGS% %BYTES_RECEIVED% %BYTES_SENT% %DURATION% %RESP(X-ENVOY-UPSTREAM-SERVICE-TIME)% \"%REQ(X-FORWARDED-FOR)%\" \"%REQ(USER-AGENT)%\" \"%REQ(:AUTHORITY)%\" \"%UPSTREAM_HOST%\" \"%DOWNSTREAM_REMOTE_ADDRESS_WITHOUT_PORT%\"\n"
                 http_filters:
                   - name: envoy.filters.http.jwt_authn
                     typed_config:
@@ -45,20 +48,6 @@ static_resources:
                             prefix: "/"
                           requires:
                             provider_name: jwt_auth
-                  - name: envoy.filters.http.lua
-                    typed_config:
-                      "@type": type.googleapis.com/envoy.extensions.filters.http.lua.v3.Lua
-                      inline_code: |
-                        function get_header(handle, header)
-                          return handle:headers():get(header)
-                        end
-
-                        function envoy_on_request(request_handle)
-                          local amznId = get_header(request_handle, "X-Amzn-Trace-Id")
-                          if amznId then
-                            request_handle:headers():replace("x-request-id", amznId)
-                          end
-                        end
                   - name: envoy.filters.http.router
                     typed_config:
                       "@type": type.googleapis.com/envoy.extensions.filters.http.router.v3.Router
@@ -71,6 +60,11 @@ static_resources:
                             prefix: "/v1"
                           route:
                             cluster: host30001
+                          request_headers_to_add:
+                            - header:
+                                key: "x-request-id"
+                                value: "%REQ(x-amzn-trace-id)%"
+                              append: false
                         - match:
                             prefix: "/"
                           response_headers_to_add:
