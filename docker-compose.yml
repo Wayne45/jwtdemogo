@@ -10,6 +10,7 @@ services:
     volumes:
       - ./files/publickey-jwks.txt:/etc/envoy/jwks/publickey-jwks.txt
       - ./_devel/envoy/envoy.yaml:/etc/envoy/envoy.yaml
+      - ./_devel/envoy/logrotate_envoy.conf:/etc/logrotate.d/envoy
       - go_logs:/app/logs
 
   service:
